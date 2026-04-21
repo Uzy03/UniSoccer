@@ -19,11 +19,9 @@ WORKDIR /workspace
 
 # ---- PyTorch (match host driver CUDA compatibility) ----
 RUN pip install --no-cache-dir \
-        typing-extensions==4.14.0 \
         torch==1.13.1+cu116 \
         torchvision==0.14.1+cu116 \
-        --index-url https://download.pytorch.org/whl/cu116 \
-        --extra-index-url https://pypi.org/simple
+        --extra-index-url https://download.pytorch.org/whl/cu116
 
 # ---- All other dependencies ----
 RUN pip install --no-cache-dir \
