@@ -25,9 +25,12 @@ RUN pip install --no-cache-dir \
         torchvision==0.14.1+cu116 \
         --extra-index-url https://download.pytorch.org/whl/cu116
 
+# ---- av: needs Cython<3 (av 9.x is pre-Cython3 era) ----
+RUN pip install --no-cache-dir "Cython<3.0" \
+    && pip install --no-cache-dir --no-build-isolation av==9.2.0
+
 # ---- All other dependencies ----
 RUN pip install --no-cache-dir \
-        av==9.2.0 \
         decord==0.6.0 \
         einops==0.8.0 \
         imageio==2.34.2 \
