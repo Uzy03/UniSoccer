@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     NVIDIA_DISABLE_REQUIRE=1
 
 RUN apt-get update && apt-get install -y \
-        wget curl git \
+        wget curl git tmux \
         ffmpeg libsm6 libxext6 libgl1-mesa-glx \
         build-essential ca-certificates \
         pkg-config \
