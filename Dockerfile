@@ -35,7 +35,6 @@ RUN pip install --no-cache-dir \
         pillow==10.4.0 \
         requests==2.32.3 \
         tqdm==4.66.4 \
-        typing-extensions==4.14.1 \
         peft==0.13.2 \
         pycocoevalcap==1.2 \
         sentence-transformers==3.0.1 \
