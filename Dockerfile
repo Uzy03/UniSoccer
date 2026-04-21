@@ -27,7 +27,7 @@ RUN pip install --no-cache-dir \
 
 # ---- All other dependencies ----
 RUN pip install --no-cache-dir \
-        av==11.0.0 \
+        av==9.2.0 \
         decord==0.6.0 \
         einops==0.8.0 \
         imageio==2.34.2 \
