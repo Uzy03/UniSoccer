@@ -18,7 +18,9 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /workspace
 
 # ---- PyTorch (match host driver CUDA compatibility) ----
+# typing-extensions<4.13 pins to Python 3.8 compatible version
 RUN pip install --no-cache-dir \
+        "typing-extensions==4.12.2" \
         torch==1.13.1+cu116 \
         torchvision==0.14.1+cu116 \
         --extra-index-url https://download.pytorch.org/whl/cu116
