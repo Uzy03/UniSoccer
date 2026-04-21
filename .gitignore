@@ -3,6 +3,7 @@ SoccerNet/
 
 # Claude
 .claude/
+tasks/
 team/
 AGENT.md
 CLAUDE.md
