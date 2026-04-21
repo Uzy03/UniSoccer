@@ -1,7 +1,8 @@
 FROM nvidia/cuda:11.6.2-cudnn8-devel-ubuntu20.04
 
 ENV DEBIAN_FRONTEND=noninteractive \
-    TZ=Asia/Tokyo
+    TZ=Asia/Tokyo \
+    NVIDIA_DISABLE_REQUIRE=1
 
 RUN apt-get update && apt-get install -y \
         wget curl git \
