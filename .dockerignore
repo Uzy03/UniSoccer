@@ -1,0 +1,13 @@
+.git
+.claude
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.egg-info
+.DS_Store
+checkpoints/
+train_data/video_clips/
+dataset/
+SoccerNet/
+*.log

@@ -1,2 +1,8 @@
 checkpoints/
 SoccerNet/
+
+# Claude
+.claude/
+team/
+AGENT.md
+CLAUDE.md
