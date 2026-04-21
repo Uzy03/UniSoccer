@@ -7,6 +7,9 @@ RUN apt-get update && apt-get install -y \
         wget curl git \
         ffmpeg libsm6 libxext6 libgl1-mesa-glx \
         build-essential ca-certificates \
+        pkg-config \
+        libavformat-dev libavcodec-dev libavdevice-dev \
+        libavutil-dev libswscale-dev libswresample-dev libavfilter-dev \
         python3 python3-pip \
     && ln -sf /usr/bin/python3 /usr/bin/python \
     && ln -sf /usr/bin/pip3 /usr/bin/pip \
