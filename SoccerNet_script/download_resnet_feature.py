@@ -4,6 +4,9 @@ from SoccerNet.utils import getListGames
 import os
 
 d = SNDown.SoccerNetDownloader(LocalDirectory="./SoccerNet")
+_pw = os.environ.get('SOCCERNET_PASSWORD')
+if _pw:
+    d.password = _pw
 
 # train の最初の1試合だけ、など
 one_game = getListGames(split="train")[0]
