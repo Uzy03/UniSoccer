@@ -3,7 +3,7 @@ MATCH_DIR  := SoccerNet/england_epl/2014-2015/2015-02-21 - 18-00 Chelsea 1 - 1 B
 JSON_PATH  := $(MATCH_DIR)/clip_dataset.json
 CKPT_PATH  := checkpoints/pretrained_classification.pth
 BATCH_SIZE := 4
-OUT_CSV    := inference/soccernet_results.csv
+OUT_CSV    := results/soccernet_results.csv
 
 DOCKER_RUN := docker run --rm --gpus all -e NVIDIA_DISABLE_REQUIRE=1 \
               -v $(CURDIR):/workspace

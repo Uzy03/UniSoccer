@@ -1,5 +1,6 @@
 checkpoints/
 SoccerNet/
+results/
 
 # Claude
 .claude/
