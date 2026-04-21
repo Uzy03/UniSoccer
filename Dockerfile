@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
+FROM nvidia/cuda:11.6.2-cudnn8-devel-ubuntu20.04
 
 ENV DEBIAN_FRONTEND=noninteractive \
     TZ=Asia/Tokyo
@@ -17,11 +17,11 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /workspace
 
-# ---- PyTorch (CUDA 11.8 build bundles its own runtime) ----
+# ---- PyTorch (match host driver CUDA compatibility) ----
 RUN pip install --no-cache-dir \
-        torch==2.3.1+cu118 \
-        torchvision==0.18.1+cu118 \
-        --index-url https://download.pytorch.org/whl/cu118
+        torch==1.13.1+cu116 \
+        torchvision==0.14.1+cu116 \
+        --index-url https://download.pytorch.org/whl/cu116
 
 # ---- All other dependencies ----
 RUN pip install --no-cache-dir \
