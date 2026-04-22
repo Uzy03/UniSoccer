@@ -8,6 +8,7 @@ JSON_PATH  := $(MATCH_DIR)/clip_dataset.json
 CKPT_PATH  := checkpoints/pretrained_classification.pth
 BATCH_SIZE := 4
 NUM_WORKERS := 0
+MAX_SAMPLES := 0
 OUT_CSV    := results/soccernet_results.csv
 
 DOCKER_RUN := docker run --rm --gpus all -e NVIDIA_DISABLE_REQUIRE=1 \
@@ -35,6 +36,7 @@ inference:
 	        --json_path "$(JSON_PATH)" \
 	        --ckpt_path $(CKPT_PATH) \
 	        --batch_size $(BATCH_SIZE) \
+	        --max_samples $(MAX_SAMPLES) \
 	        --out_csv $(OUT_CSV)
 
 inference_local:
@@ -42,6 +44,7 @@ inference_local:
 	    --json_path "$(JSON_PATH)" \
 	    --ckpt_path $(CKPT_PATH) \
 	    --batch_size $(BATCH_SIZE) \
+	    --max_samples $(MAX_SAMPLES) \
 	    --out_csv $(OUT_CSV)
 
 upload:
