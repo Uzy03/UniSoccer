@@ -7,6 +7,7 @@ from model.MatchVision_classifier import MatchVision_Classifier
 model = MatchVision_Classifier()
 ckpt = torch.load('checkpoints/pretrained_classification.pth', map_location='cpu')
 state_dict = ckpt.get('state_dict', ckpt.get('model', ckpt))
+state_dict = {k.replace('module.', '', 1): v for k, v in state_dict.items()}
 
 model_keys = set(model.state_dict().keys())
 ckpt_keys = set(state_dict.keys())
