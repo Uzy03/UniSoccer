@@ -77,8 +77,9 @@ def main():
 
         position = int(annotation.get('position', 0))
         window_ms = window_sec * 1000
-        start_ms = max(0, position - window_ms)
-        end_ms = position
+        half_window = window_ms // 2
+        start_ms = max(0, position - half_window)
+        end_ms = position + half_window
 
         video_path = os.path.join(match_dir, f'{half}_720p.mkv')
 
