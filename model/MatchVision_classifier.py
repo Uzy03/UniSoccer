@@ -21,7 +21,7 @@ class MatchVision_Classifier(nn.Module):
                 'end of game(half)', 'yellow card', 'throw in', 'free kick', 
                 'saved by goal-keeper', 'shot off target', 'clearance', 'lead to corner', 
                 'off-side', 'var', 'foul (no card)', 'statistics and summary', 
-                'ball possession', 'ball out of play'
+                'ball out of play'
             ]
         else:
             self.keywords = keywords

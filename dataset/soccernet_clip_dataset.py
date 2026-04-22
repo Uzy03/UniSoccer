@@ -22,7 +22,7 @@ class SoccerNetClipDataset(Dataset):
             'end of game(half)', 'yellow card', 'throw in', 'free kick',
             'saved by goal-keeper', 'shot off target', 'clearance', 'lead to corner',
             'off-side', 'var', 'foul (no card)', 'statistics and summary',
-            'ball possession', 'ball out of play'
+            'ball out of play'
         ]
     
     def __len__(self):
