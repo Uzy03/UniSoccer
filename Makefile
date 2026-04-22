@@ -1,4 +1,8 @@
 IMAGE      := unisoccer
+REMOTE     := ujihara@solar.arch.cs.kumamoto-u.ac.jp
+REMOTE_PORT := 2222
+REMOTE_DIR := /user/arch/ujihara/UniSoccer
+SRC        := SoccerNet/
 MATCH_DIR  := SoccerNet/england_epl/2014-2015/2015-02-21 - 18-00 Chelsea 1 - 1 Burnley
 JSON_PATH  := $(MATCH_DIR)/clip_dataset.json
 CKPT_PATH  := checkpoints/pretrained_classification.pth
@@ -8,7 +12,7 @@ OUT_CSV    := results/soccernet_results.csv
 DOCKER_RUN := docker run --rm --gpus all -e NVIDIA_DISABLE_REQUIRE=1 \
               -v $(CURDIR):/workspace
 
-.PHONY: build run preprocess inference clean
+.PHONY: build run preprocess inference inference_local clean
 
 build:
 	docker build --force-rm -t $(IMAGE) .
@@ -29,6 +33,18 @@ inference:
 	        --ckpt_path $(CKPT_PATH) \
 	        --batch_size $(BATCH_SIZE) \
 	        --out_csv $(OUT_CSV)
+
+inference_local:
+	python inference/inference_soccernet.py \
+	    --json_path "$(JSON_PATH)" \
+	    --ckpt_path $(CKPT_PATH) \
+	    --batch_size $(BATCH_SIZE) \
+	    --out_csv $(OUT_CSV)
+
+upload:
+	COPYFILE_DISABLE=1 tar --exclude='._*' --exclude='.DS_Store' -cf - "$(SRC)" | \
+	    ssh -p $(REMOTE_PORT) $(REMOTE) \
+	        "mkdir -p '$(REMOTE_DIR)' && cd '$(REMOTE_DIR)' && tar -xf -"
 
 clean:
 	docker image prune -f
