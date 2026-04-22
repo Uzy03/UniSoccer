@@ -5,6 +5,7 @@ import argparse
 import csv
 import torch
 from torch.utils.data import DataLoader
+from tqdm import tqdm
 from dataset.soccernet_clip_dataset import SoccerNetClipDataset
 from model.MatchVision_classifier import MatchVision_Classifier
 
@@ -45,7 +46,7 @@ def main():
     total_samples = 0
     
     with torch.no_grad():
-        for batch in dataloader:
+        for batch in tqdm(dataloader, desc='Inference'):
             frames, caption_idx, video_paths, captions, game_times = batch
             logits = model.get_logits(frames.to(args.device))
             preds = logits.argmax(dim=1)
