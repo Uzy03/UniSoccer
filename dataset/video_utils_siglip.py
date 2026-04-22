@@ -88,7 +88,7 @@ def read_frames_decord(
 from transformers import AutoProcessor
 
 def set_transform(
-        model_name = "/remote-home/jiayuanrao/huggingface_models/models--google--siglip-base-patch16-224/snapshots/cc3289c7ee0594a9e640dbf5580511cdcca21837"
+        model_name = "google/siglip-base-patch16-224"
     ):
     # 创建 SiglipProcessor 实例
     processor = AutoProcessor.from_pretrained(model_name)
