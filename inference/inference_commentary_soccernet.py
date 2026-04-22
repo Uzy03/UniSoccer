@@ -93,11 +93,13 @@ def main():
         llm_ckpt=args.llm_ckpt,
         tokenizer_ckpt=args.llm_ckpt,
     )
+    model.to(args.device)
     ckpt = torch.load(args.ckpt_path, map_location='cpu')
     state_dict = ckpt.get('state_dict', ckpt)
     state_dict = dict([(k.replace('module.', '', 1), v) for k, v in state_dict.items()])
     model.load_state_dict(state_dict, strict=False)
-    model.to(args.device).eval()
+    del ckpt, state_dict
+    model.eval()
     
     # Step 4: Inference on each correct clip
     results = []
