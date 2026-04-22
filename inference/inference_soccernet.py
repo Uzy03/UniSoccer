@@ -18,6 +18,7 @@ def main():
     parser.add_argument('--batch_size', type=int, default=4, help='Batch size for inference')
     parser.add_argument('--out_csv', type=str, default='inference/soccernet_results.csv',
                         help='Output CSV file path')
+    parser.add_argument('--num_workers', type=int, default=0, help='Number of DataLoader workers (0 = main process only)')
     args = parser.parse_args()
     
     dataset = SoccerNetClipDataset(args.json_path)
@@ -25,7 +26,7 @@ def main():
         dataset,
         batch_size=args.batch_size,
         shuffle=False,
-        num_workers=2
+        num_workers=args.num_workers
     )
     
     model = MatchVision_Classifier()
