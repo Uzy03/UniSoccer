@@ -34,10 +34,14 @@ def main():
         num_workers=args.num_workers
     )
     
-    model = MatchVision_Classifier()
     ckpt = torch.load(args.ckpt_path, map_location='cpu')
     state_dict = ckpt.get('state_dict', ckpt.get('model', ckpt))
     state_dict = {k.replace('module.', '', 1): v for k, v in state_dict.items()}
+    num_classes_ckpt = state_dict['classifier.weight'].shape[0]
+    model = MatchVision_Classifier()
+    if len(model.keywords) != num_classes_ckpt:
+        keywords = [k for k in model.keywords if k != 'ball possession']
+        model = MatchVision_Classifier(keywords=keywords[:num_classes_ckpt])
     model.load_state_dict(state_dict, strict=False)
     model.to(args.device).eval()
     
