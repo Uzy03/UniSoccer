@@ -32,7 +32,7 @@ def main():
     
     model = MatchVision_Classifier()
     ckpt = torch.load(args.ckpt_path, map_location='cpu')
-    state_dict = ckpt.get('model', ckpt)
+    state_dict = ckpt.get('state_dict', ckpt.get('model', ckpt))
     model.load_state_dict(state_dict, strict=False)
     model.to(args.device).eval()
     
