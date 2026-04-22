@@ -7,6 +7,7 @@ MATCH_DIR  := SoccerNet/england_epl/2014-2015/2015-02-21 - 18-00 Chelsea 1 - 1 B
 JSON_PATH  := $(MATCH_DIR)/clip_dataset.json
 CKPT_PATH  := checkpoints/pretrained_classification.pth
 COMMENTARY_CKPT := checkpoints/downstream_commentary_all_open.pth
+LLM_CKPT       := meta-llama/Meta-Llama-3-8B-Instruct
 BATCH_SIZE := 4
 NUM_WORKERS := 0
 MAX_SAMPLES := 0
@@ -55,6 +56,7 @@ inference_commentary:
 	    --results_csv $(OUT_CSV) \
 	    --json_path "$(JSON_PATH)" \
 	    --ckpt_path $(COMMENTARY_CKPT) \
+	    --llm_ckpt $(LLM_CKPT) \
 	    --out_csv $(COMMENTARY_CSV) \
 	    --device $(DEVICE)
 

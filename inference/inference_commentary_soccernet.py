@@ -54,6 +54,8 @@ def main():
                         help='Path to clip_dataset.json')
     parser.add_argument('--ckpt_path', type=str, default='checkpoints/downstream_commentary_all_open.pth',
                         help='Path to model checkpoint')
+    parser.add_argument('--llm_ckpt', type=str, default='meta-llama/Meta-Llama-3-8B-Instruct',
+                        help='Local path or HuggingFace ID for LLaMA-3-8B-Instruct')
     parser.add_argument('--out_csv', type=str, default='results/commentary_results.csv',
                         help='Path to output CSV')
     parser.add_argument('--device', type=str, default='cuda',
@@ -87,7 +89,9 @@ def main():
     model = matchvoice_model_all_blocks(
         load_checkpoint=False,
         num_features=768,
-        need_temporal='yes'
+        need_temporal='yes',
+        llm_ckpt=args.llm_ckpt,
+        tokenizer_ckpt=args.llm_ckpt,
     )
     ckpt = torch.load(args.ckpt_path, map_location='cpu')
     state_dict = ckpt.get('state_dict', ckpt)
