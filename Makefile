@@ -7,9 +7,11 @@ MATCH_DIR  := SoccerNet/england_epl/2014-2015/2015-02-21 - 18-00 Chelsea 1 - 1 B
 JSON_PATH  := $(MATCH_DIR)/clip_dataset.json
 CKPT_PATH  := checkpoints/pretrained_classification.pth
 BATCH_SIZE := 4
+NUM_WORKERS := 0
 OUT_CSV    := results/soccernet_results.csv
 
 DOCKER_RUN := docker run --rm --gpus all -e NVIDIA_DISABLE_REQUIRE=1 \
+              --shm-size=8g \
               -v $(CURDIR):/workspace
 
 .PHONY: build run preprocess inference inference_local clean
@@ -19,6 +21,7 @@ build:
 
 run:
 	docker run -it --gpus all -e NVIDIA_DISABLE_REQUIRE=1 \
+	    --shm-size=8g \
 	    -v $(CURDIR):/workspace \
 	    $(IMAGE)
 

@@ -47,7 +47,8 @@ RUN pip install --no-cache-dir \
         wandb==0.19.1 \
         opencv-python==4.10.0.84 \
         SoccerNet==0.1.62 \
-        huggingface_hub
+        huggingface_hub \
+        sentencepiece
 
 COPY . /workspace/
 
