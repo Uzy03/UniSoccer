@@ -20,9 +20,13 @@ def main():
     parser.add_argument('--out_csv', type=str, default='inference/soccernet_results.csv',
                         help='Output CSV file path')
     parser.add_argument('--num_workers', type=int, default=0, help='Number of DataLoader workers (0 = main process only)')
+    parser.add_argument('--max_samples', type=int, default=0,
+                        help='先頭N件だけ使う（0=全件）')
     args = parser.parse_args()
     
     dataset = SoccerNetClipDataset(args.json_path)
+    if args.max_samples > 0:
+        dataset.data = dataset.data[:args.max_samples]
     dataloader = DataLoader(
         dataset,
         batch_size=args.batch_size,
