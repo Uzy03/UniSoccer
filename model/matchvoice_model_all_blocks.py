@@ -71,7 +71,7 @@ class matchvoice_model_all_blocks(nn.Module):
             print("======== Visual encoder is opened!")
         self.open_llm_decoder = open_llm_decoder
         # print("AA", open_llm_decoder)
-        self.llama_model = AutoModelForCausalLM.from_pretrained(llm_ckpt, torch_dtype=torch.bfloat16)
+        self.llama_model = AutoModelForCausalLM.from_pretrained(llm_ckpt, torch_dtype=torch.float16)
         self.llama_model.resize_token_embeddings(len(self.tokenizer))
         if self.open_llm_decoder == True:
             lora_config = LoraConfig(
@@ -249,7 +249,7 @@ class matchvoice_model_all_blocks(nn.Module):
             start_embeds = self.llama_model.base_model.model.model.embed_tokens(torch.tensor([128000]).to(inputs_llama.device))
         else:
             start_embeds = self.llama_model.model.embed_tokens(torch.tensor([128000]).to(inputs_llama.device))
-        inputs_llama_with_s = torch.cat([inputs_llama, start_embeds.expand(inputs_llama.size(0), -1, -1)], dim=1).to(dtype=torch.bfloat16)
+        inputs_llama_with_s = torch.cat([inputs_llama, start_embeds.expand(inputs_llama.size(0), -1, -1)], dim=1).to(dtype=torch.float16)
         temp_res_tokens = self.llama_model.generate(
             logits_processor=self.logits_prosessors,
             renormalize_logits=True,
