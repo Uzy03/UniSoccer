@@ -26,7 +26,7 @@ build:
 	docker build --force-rm -t $(IMAGE) .
 
 run:
-	docker run -it --gpus all -e NVIDIA_DISABLE_REQUIRE=1 \
+	docker run -it --rm --gpus all -e NVIDIA_DISABLE_REQUIRE=1 \
 	    --shm-size=8g \
 	    -v $(CURDIR):/workspace \
 	    -v $(CURDIR)/hf_cache:/root/.cache/huggingface \
