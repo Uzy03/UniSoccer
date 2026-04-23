@@ -6,8 +6,10 @@ SRC        := SoccerNet/
 MATCH_DIR  := SoccerNet/england_epl/2014-2015/2015-02-21 - 18-00 Chelsea 1 - 1 Burnley
 JSON_PATH  := $(MATCH_DIR)/clip_dataset.json
 CKPT_PATH  := checkpoints/pretrained_classification.pth
-COMMENTARY_CKPT := checkpoints/downstream_commentary_all_open.pth
-LLM_CKPT       := meta-llama/Meta-Llama-3-8B-Instruct
+COMMENTARY_CKPT    := checkpoints/downstream_commentary_all_open.pth
+LLM_CKPT           := meta-llama/Meta-Llama-3-8B-Instruct
+INSTRUCTION_CONFIG := configs/instruction_explain.json
+INSTRUCTION_CSV    := results/instruction_results.csv
 BATCH_SIZE := 4
 NUM_WORKERS := 0
 MAX_SAMPLES := 0
@@ -20,7 +22,7 @@ DOCKER_RUN := docker run --rm --gpus all -e NVIDIA_DISABLE_REQUIRE=1 \
               -v $(CURDIR):/workspace \
               -v $(CURDIR)/hf_cache:/root/.cache/huggingface
 
-.PHONY: build run preprocess inference inference_local inference_commentary clean
+.PHONY: build run preprocess inference inference_local inference_commentary inference_instruction extract_clips clean
 
 build:
 	docker build --force-rm -t $(IMAGE) .
@@ -61,6 +63,22 @@ inference_commentary:
 	    --llm_ckpt $(LLM_CKPT) \
 	    --out_csv $(COMMENTARY_CSV) \
 	    --device $(DEVICE)
+
+inference_instruction:
+	python inference/inference_instruction_soccernet.py \
+	    --config $(INSTRUCTION_CONFIG) \
+	    --results_csv $(OUT_CSV) \
+	    --json_path "$(JSON_PATH)" \
+	    --ckpt_path $(COMMENTARY_CKPT) \
+	    --llm_ckpt $(LLM_CKPT) \
+	    --out_csv $(INSTRUCTION_CSV) \
+	    --device $(DEVICE)
+
+extract_clips:
+	python SoccerNet_script/extract_clips.py \
+	    --results_csv $(COMMENTARY_CSV) \
+	    --json_path "$(JSON_PATH)" \
+	    --out_dir results/presentation
 
 upload:
 	COPYFILE_DISABLE=1 tar --exclude='._*' --exclude='.DS_Store' -cf - "$(SRC)" | \

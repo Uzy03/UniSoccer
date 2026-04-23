@@ -141,6 +141,9 @@ class matchvoice_model_all_blocks(nn.Module):
         self.processor = RestrictTokenGenerationLogitsProcessor(allowed_token_id_list=self.token_ids_list)
         self.logits_prosessors = LogitsProcessorList()
         self.logits_prosessors.append(self.processor)
+        self.instruction = ''
+        self.use_logits_filter = True
+        self._max_new_tokens = 128
 
     @classmethod
     def init_video_Qformer(cls, num_query_token, vision_width, num_hidden_layers =2):
@@ -246,15 +249,29 @@ class matchvoice_model_all_blocks(nn.Module):
     
     def generate_text(self, inputs_llama):
         if self.open_llm_decoder == True:
-            start_embeds = self.llama_model.base_model.model.model.embed_tokens(torch.tensor([128000]).to(inputs_llama.device))
+            embed_fn = self.llama_model.base_model.model.model.embed_tokens
         else:
-            start_embeds = self.llama_model.model.embed_tokens(torch.tensor([128000]).to(inputs_llama.device))
-        inputs_llama_with_s = torch.cat([inputs_llama, start_embeds.expand(inputs_llama.size(0), -1, -1)], dim=1).to(dtype=torch.float16)
-        temp_res_tokens = self.llama_model.generate(
-            logits_processor=self.logits_prosessors,
+            embed_fn = self.llama_model.model.embed_tokens
+
+        B = inputs_llama.size(0)
+        parts = [inputs_llama]
+
+        if self.instruction:
+            inst_ids = self.tokenizer(
+                self.instruction, add_special_tokens=False, return_tensors='pt'
+            ).input_ids.to(inputs_llama.device)
+            inst_embeds = embed_fn(inst_ids).expand(B, -1, -1)
+            parts.append(inst_embeds)
+
+        bos = embed_fn(torch.tensor([128000]).to(inputs_llama.device))
+        parts.append(bos.expand(B, -1, -1))
+
+        combined = torch.cat(parts, dim=1).to(dtype=torch.float16)
+
+        gen_kwargs = dict(
             renormalize_logits=True,
-            inputs_embeds=inputs_llama_with_s,
-            max_new_tokens=128,
+            inputs_embeds=combined,
+            max_new_tokens=self._max_new_tokens,
             num_beams=5,
             do_sample=True,
             min_length=5,
@@ -263,8 +280,11 @@ class matchvoice_model_all_blocks(nn.Module):
             length_penalty=1,
             temperature=1.0,
         )
-        res_text = process_output_tokens(self, temp_res_tokens)
-        return res_text
+        if self.use_logits_filter:
+            gen_kwargs['logits_processor'] = self.logits_prosessors
+
+        tokens = self.llama_model.generate(**gen_kwargs)
+        return process_output_tokens(self, tokens)
 
 class LayerNorm(nn.LayerNorm):
     def forward(self, x: torch.Tensor):

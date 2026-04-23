@@ -1,0 +1,5 @@
+{
+  "instruction": "How many passes occurred in this scene? Answer with a number.",
+  "use_logits_filter": false,
+  "max_new_tokens": 64
+}

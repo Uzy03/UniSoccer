@@ -1,0 +1,5 @@
+{
+  "instruction": "Describe what is happening in this soccer scene.",
+  "use_logits_filter": false,
+  "max_new_tokens": 256
+}
