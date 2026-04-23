@@ -14,10 +14,12 @@ BATCH_SIZE := 4
 NUM_WORKERS := 0
 MAX_SAMPLES := 0
 DEVICE     := cuda
+GPU        := 0
 OUT_CSV    := results/soccernet_results.csv
 COMMENTARY_CSV := results/commentary_results.csv
 
 DOCKER_RUN := docker run --rm --gpus all -e NVIDIA_DISABLE_REQUIRE=1 \
+              -e CUDA_VISIBLE_DEVICES=$(GPU) \
               --shm-size=8g \
               -v $(CURDIR):/workspace \
               -v $(CURDIR)/hf_cache:/root/.cache/huggingface
@@ -48,7 +50,7 @@ inference:
 	        --out_csv $(OUT_CSV)
 
 inference_local:
-	python inference/inference_soccernet.py \
+	CUDA_VISIBLE_DEVICES=$(GPU) python inference/inference_soccernet.py \
 	    --json_path "$(JSON_PATH)" \
 	    --ckpt_path $(CKPT_PATH) \
 	    --batch_size $(BATCH_SIZE) \
@@ -56,7 +58,7 @@ inference_local:
 	    --out_csv $(OUT_CSV)
 
 inference_commentary:
-	python inference/inference_commentary_soccernet.py \
+	CUDA_VISIBLE_DEVICES=$(GPU) python inference/inference_commentary_soccernet.py \
 	    --results_csv $(OUT_CSV) \
 	    --json_path "$(JSON_PATH)" \
 	    --ckpt_path $(COMMENTARY_CKPT) \
@@ -65,7 +67,7 @@ inference_commentary:
 	    --device $(DEVICE)
 
 inference_instruction:
-	python inference/inference_instruction_soccernet.py \
+	CUDA_VISIBLE_DEVICES=$(GPU) python inference/inference_instruction_soccernet.py \
 	    --config $(INSTRUCTION_CONFIG) \
 	    --results_csv $(OUT_CSV) \
 	    --json_path "$(JSON_PATH)" \
