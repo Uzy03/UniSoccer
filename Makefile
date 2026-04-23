@@ -17,7 +17,8 @@ DEVICE     := cuda
 GPU        := 1
 OUT_CSV    := results/soccernet_results.csv
 COMMENTARY_CSV := results/commentary_results.csv
-EXTRA_GAME_TIMES :=
+EXTRA_GAME_TIMES ?=
+GAME_TIMES       ?=
 
 DOCKER_RUN := docker run --rm --gpus all -e NVIDIA_DISABLE_REQUIRE=1 \
               -e CUDA_VISIBLE_DEVICES=$(GPU) \
@@ -66,6 +67,7 @@ inference_commentary:
 	    --llm_ckpt $(LLM_CKPT) \
 	    --out_csv $(COMMENTARY_CSV) \
 	    --extra_game_times "$(EXTRA_GAME_TIMES)" \
+	    --game_times "$(GAME_TIMES)" \
 	    --device $(DEVICE)
 
 inference_instruction:
