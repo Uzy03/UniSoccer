@@ -60,6 +60,8 @@ def main():
                         help='Path to output CSV')
     parser.add_argument('--device', type=str, default='cuda',
                         help='Device to use for inference')
+    parser.add_argument('--extra_game_times', type=str, default='',
+                        help='追加で処理するgameTimeのカンマ区切りリスト（例: "1 - 13:10,1 - 40:08"）')
     
     args = parser.parse_args()
     
@@ -70,6 +72,12 @@ def main():
         for row in reader:
             if row.get('correct') == '1':
                 correct_game_times.append(row['gameTime'])
+    
+    if args.extra_game_times:
+        for gt in args.extra_game_times.split(','):
+            gt = gt.strip()
+            if gt and gt not in correct_game_times:
+                correct_game_times.append(gt)
     
     if len(correct_game_times) == 0:
         print("No correct clips found.")
