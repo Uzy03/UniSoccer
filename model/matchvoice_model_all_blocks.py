@@ -254,7 +254,8 @@ class matchvoice_model_all_blocks(nn.Module):
             embed_fn = self.llama_model.model.embed_tokens
 
         B = inputs_llama.size(0)
-        parts = [inputs_llama]
+        bos = embed_fn(torch.tensor([128000]).to(inputs_llama.device))
+        parts = [inputs_llama, bos.expand(B, -1, -1)]
 
         if self.instruction:
             inst_ids = self.tokenizer(
@@ -262,9 +263,6 @@ class matchvoice_model_all_blocks(nn.Module):
             ).input_ids.to(inputs_llama.device)
             inst_embeds = embed_fn(inst_ids).expand(B, -1, -1)
             parts.append(inst_embeds)
-
-        bos = embed_fn(torch.tensor([128000]).to(inputs_llama.device))
-        parts.append(bos.expand(B, -1, -1))
 
         combined = torch.cat(parts, dim=1).to(dtype=torch.float16)
 
