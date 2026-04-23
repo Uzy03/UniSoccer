@@ -78,6 +78,8 @@ inference_instruction:
 	    --ckpt_path $(COMMENTARY_CKPT) \
 	    --llm_ckpt $(LLM_CKPT) \
 	    --out_csv $(INSTRUCTION_CSV) \
+	    --extra_game_times "$(EXTRA_GAME_TIMES)" \
+	    --game_times "$(GAME_TIMES)" \
 	    --device $(DEVICE)
 
 extract_clips:

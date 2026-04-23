@@ -62,6 +62,10 @@ def main():
                         help='Device to use for inference')
     parser.add_argument('--config', type=str, default='configs/instruction_explain.json',
                         help='Path to instruction config JSON')
+    parser.add_argument('--extra_game_times', type=str, default='',
+                        help='追加で処理するgameTimeのカンマ区切りリスト')
+    parser.add_argument('--game_times', type=str, default='',
+                        help='処理するgameTimeをカンマ区切りで直接指定（指定するとresults_csvのcorrect=1フィルターを完全にスキップ）')
     
     args = parser.parse_args()
     
@@ -73,15 +77,23 @@ def main():
         args.out_csv = config['out_csv']
     
     # Step 1: Get gameTime list of correct clips
-    correct_game_times = []
-    with open(args.results_csv, 'r') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            if row.get('correct') == '1':
-                correct_game_times.append(row['gameTime'])
-    
+    if args.game_times:
+        correct_game_times = [gt.strip() for gt in args.game_times.split(',') if gt.strip()]
+    else:
+        correct_game_times = []
+        with open(args.results_csv, 'r') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if row.get('correct') == '1':
+                    correct_game_times.append(row['gameTime'])
+        if args.extra_game_times:
+            for gt in args.extra_game_times.split(','):
+                gt = gt.strip()
+                if gt and gt not in correct_game_times:
+                    correct_game_times.append(gt)
+
     if len(correct_game_times) == 0:
-        print("No correct clips found.")
+        print('No correct clips found.')
         return
     
     # Step 2: Get entries from clip_dataset.json
