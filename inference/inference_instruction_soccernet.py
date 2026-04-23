@@ -69,6 +69,8 @@ def main():
         config = json.load(f)
     instruction = config.get('instruction', '')
     max_new_tokens = config.get('max_new_tokens', 128)
+    if 'out_csv' in config:
+        args.out_csv = config['out_csv']
     
     # Step 1: Get gameTime list of correct clips
     correct_game_times = []

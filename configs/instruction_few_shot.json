@@ -1,0 +1,6 @@
+{
+  "instruction": "Here are examples of soccer commentary:\nExample: The ball goes out of play near the touchline. [TEAM] will take a throw-in.\nExample: [PLAYER] sends the ball out of play. It's a corner kick for [TEAM].\nNow describe what is happening in this soccer scene:",
+  "use_logits_filter": true,
+  "max_new_tokens": 256,
+  "out_csv": "results/instruction_few_shot_results.csv"
+}

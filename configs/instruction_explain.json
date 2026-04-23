@@ -1,5 +1,6 @@
 {
   "instruction": "Describe what is happening in this soccer scene.",
   "use_logits_filter": true,
-  "max_new_tokens": 256
+  "max_new_tokens": 256,
+  "out_csv": "results/instruction_results.csv"
 }
