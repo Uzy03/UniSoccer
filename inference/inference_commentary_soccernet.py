@@ -92,6 +92,7 @@ def main():
         need_temporal='yes',
         llm_ckpt=args.llm_ckpt,
         tokenizer_ckpt=args.llm_ckpt,
+        open_llm_decoder=True,
     )
     model.to(args.device)
     ckpt = torch.load(args.ckpt_path, map_location='cpu')
