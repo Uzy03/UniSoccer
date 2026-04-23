@@ -14,7 +14,7 @@ BATCH_SIZE := 4
 NUM_WORKERS := 0
 MAX_SAMPLES := 0
 DEVICE     := cuda
-GPU        := 0
+GPU        := 1
 OUT_CSV    := results/soccernet_results.csv
 COMMENTARY_CSV := results/commentary_results.csv
 
