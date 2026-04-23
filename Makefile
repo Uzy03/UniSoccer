@@ -17,7 +17,8 @@ COMMENTARY_CSV := results/commentary_results.csv
 
 DOCKER_RUN := docker run --rm --gpus all -e NVIDIA_DISABLE_REQUIRE=1 \
               --shm-size=8g \
-              -v $(CURDIR):/workspace
+              -v $(CURDIR):/workspace \
+              -v $(CURDIR)/hf_cache:/root/.cache/huggingface
 
 .PHONY: build run preprocess inference inference_local inference_commentary clean
 
@@ -28,6 +29,7 @@ run:
 	docker run -it --gpus all -e NVIDIA_DISABLE_REQUIRE=1 \
 	    --shm-size=8g \
 	    -v $(CURDIR):/workspace \
+	    -v $(CURDIR)/hf_cache:/root/.cache/huggingface \
 	    $(IMAGE)
 
 preprocess:

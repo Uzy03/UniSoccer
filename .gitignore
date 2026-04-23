@@ -1,6 +1,7 @@
 checkpoints/
 SoccerNet/
 results/
+hf_cache/
 
 # Claude
 .claude/
