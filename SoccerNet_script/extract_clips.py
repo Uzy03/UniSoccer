@@ -70,9 +70,13 @@ def main():
         safe_name = game_time.replace(' - ', '_').replace(':', '_').replace(' ', '_')
         out_path = os.path.join(args.out_dir, safe_name + '.mp4')
 
+        if os.path.exists(out_path):
+            print(f'Skipping {game_time}: already exists')
+            continue
+
         # Build ffmpeg command
         cmd = [
-            'ffmpeg', '-y',
+            'ffmpeg',
             '-ss', str(start_sec),
             '-t', str(duration_sec),
             '-i', entry['video'],
