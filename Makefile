@@ -20,13 +20,18 @@ COMMENTARY_CSV := results/commentary_results.csv
 EXTRA_GAME_TIMES ?=
 GAME_TIMES       ?=
 
+TRACKING_ZIP     := SoccerNet/tracking/train.zip
+CAPTION_DIR      ?= SoccerNet/caption-2023/england_epl/2014-2015/2015-02-21 - 18-00 Chelsea 1 - 1 Burnley
+TRACKING_OUT     := tracking_clips_sn
+TRACKING_SPLIT   := train
+
 DOCKER_RUN := docker run --rm --gpus all -e NVIDIA_DISABLE_REQUIRE=1 \
               -e CUDA_VISIBLE_DEVICES=$(GPU) \
               --shm-size=8g \
               -v $(CURDIR):/workspace \
               -v $(CURDIR)/hf_cache:/root/.cache/huggingface
 
-.PHONY: build run preprocess inference inference_local inference_commentary inference_instruction extract_clips clean
+.PHONY: build run preprocess inference inference_local inference_commentary inference_instruction extract_clips preprocess_sn_tracking verify_sn_tracking clean
 
 build:
 	docker build --force-rm -t $(IMAGE) .
@@ -81,6 +86,24 @@ inference_instruction:
 	    --extra_game_times "$(EXTRA_GAME_TIMES)" \
 	    --game_times "$(GAME_TIMES)" \
 	    --device $(DEVICE)
+
+preprocess_sn_tracking:
+	CUDA_VISIBLE_DEVICES=$(GPU) python tracking/preprocess/create_soccernet_clips.py \
+	    --tracking_zip "$(TRACKING_ZIP)" \
+	    --caption_dir "$(CAPTION_DIR)" \
+	    --out_dir $(TRACKING_OUT) \
+	    --split $(TRACKING_SPLIT)
+
+verify_sn_tracking:
+	python -c "\
+import json, numpy as np; \
+data = json.load(open('$(TRACKING_OUT)/soccernet_clips.json')); \
+print(f'ペア数: {len(data)}'); \
+e = data[0] if data else None; \
+print(f'  seq_id:  {e[\"seq_id\"]}') if e else print('  (no data)'); \
+print(f'  caption: {e[\"caption\"][:80]}') if e else None; \
+print(f'  shape:   {np.load(e[\"npy_path\"]).shape}') if e else None; \
+"
 
 extract_clips:
 	python SoccerNet_script/extract_clips.py \

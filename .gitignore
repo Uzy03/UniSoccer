@@ -2,6 +2,8 @@ checkpoints/
 SoccerNet/
 results/
 hf_cache/
+tracking/
+tracking_clips/
 
 # Claude
 .claude/
